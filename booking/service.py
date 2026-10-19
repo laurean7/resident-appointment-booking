@@ -26,6 +26,9 @@ class AppointmentService:
                 if (service, date, t) not in self._booked]
 
     def book(self, name, postcode, service, date, time):
+        if (service, date, time) in self._booked:
+            return BookingResult(False, "That slot is no longer available",
+                                 alternatives=self.available_slots(service, date))
         self._booked.add((service, date, time))
         reference = f"HA-{next(self._sequence):04d}"
         return BookingResult(True, "Your appointment is booked", reference)
